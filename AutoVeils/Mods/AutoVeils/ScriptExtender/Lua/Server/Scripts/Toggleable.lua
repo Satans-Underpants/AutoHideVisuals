@@ -63,8 +63,10 @@ end
 
 ---@param character GUIDSTRING     - the character who will take off their veil
 function Toggleable:takeOffVeil(character)
-    local veil = Visuals:getVeil(character)
+    local veil = Visuals:getVisual(character)
+    print("veil ", veil)
     if veil then
+        print("Veil is ", veil)  
         Toggleable:setToggledOffVeil(character, veil)
         Osi.RemoveCustomVisualOvirride(character, veil)
     end
@@ -72,7 +74,9 @@ end
 
 ---@param character GUIDSTRING     - the character who will put on their veil again
 function Toggleable:putOnVeil(character)
-    veil = Toggleable:getToggledOffVeils()[character]
+    _D(PersistentVars['toggledOffVeils'])
+    print(character)
+    local veil = Toggleable:getToggledOffVeils()[character]
     if veil then
         Osi.AddCustomVisualOverride(character, veil)
     end
@@ -93,17 +97,19 @@ Ext.Osiris.RegisterListener("LevelGameplayStarted", 2, "after", function(_, _)
 
 end)
 
--- Adds the "STake off Veil" toggle to a partymember added during gameplay
+-- Adds the "Take off Veil" toggle to a partymember added during gameplay
 Ext.Osiris.RegisterListener("CharacterJoinedParty", 1, "after", function(character)
     Toggleable:addPassive(character,"TAKE_OFF_VEIL_PASSIVE")
 end)
 
 
 
--- SHas the partymember take off their veil if "Take off Veil" is activated
+-- Has the partymember take off their veil if "Take off Veil" is activated
 Ext.Osiris.RegisterListener("StatusApplied", 4, "after", function(character, status, _, _)
     if status == "TAKE_OFF_VEIL_STATUS" then
+        print("Take of veil status activated")
 		Toggleable:takeOffVeil(character)
+        Visuals:removeVisualSetSlot(character, "101f3f89-a4e5-4e30-a0ff-7b5df0ccc30b")
 	end
 end)
 

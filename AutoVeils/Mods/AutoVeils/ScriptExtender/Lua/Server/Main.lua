@@ -26,8 +26,8 @@ Ext.Osiris.RegisterListener("QRY_CampNight_TryStartSleepMoment_RomanceNight", 3,
 
 
         -- partner 1
-        local currentVeilA = Visuals:getVeil(CHARACTERA)
-        Visuals:setVeil(CHARACTERA, currentVeilA)
+        local currentVeilA = Visuals:getVisual(CHARACTERA)
+        Visuals:setVisual(CHARACTERA, currentVeilA)
         local veil = Visuals:getSavedVeils()[CHARACTERA]
         if currentVeilA then
             Osi.RemoveCustomVisualOvirride(CHARACTERA, currentVeilA)
@@ -35,8 +35,8 @@ Ext.Osiris.RegisterListener("QRY_CampNight_TryStartSleepMoment_RomanceNight", 3,
 
         -- partner 2
 
-        local currentVeilB = Visuals:getVeil(CHARACTERB)
-        Visuals:setVeil(CHARACTERB, currentVeilB)
+        local currentVeilB = Visuals:getVisual(CHARACTERB)
+        Visuals:setVisual(CHARACTERB, currentVeilB)
         local veil = Visuals:getSavedVeils()[CHARACTERB]
         if currentVeilB then
             Osi.RemoveCustomVisualOvirride(CHARACTERB, currentVeilB)
@@ -48,10 +48,9 @@ end)
 -- Triggers when a Romance is over. Reapply Veil
 Ext.Osiris.RegisterListener("TeleportedToCamp", 1, "before", function(character)
 
-    veils = Visuals:getSavedVeils()
-
-    for character,veil in pairs(veils) do
-        Osi.AddCustomVisualOverride(character, veil)
+    -- if autoveil passive is activated, toggle it
+    if Osi.HasActiveStatus(character, "TAKE_OFF_VEIL_STATUS") then
+        Osi.TogglePassive(character, "TAKE_OFF_VEIL_PASSIVE")
     end
 end)
 
